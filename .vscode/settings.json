@@ -1,9 +1,11 @@
 {
-  "editor.fontSize": 13,
+  "editor.fontSize": 12,
   "editor.minimap.sectionHeaderFontSize": 10,
-  "debug.console.fontSize": 13,
-  "terminal.integrated.fontSize": 13,
+  "debug.console.fontSize": 12,
+  "terminal.integrated.fontSize": 12,
   "markdown.preview.lineHeight": 1.5,
-  "markdown.preview.fontSize": 13,
-  "chat.editor.fontSize": 13
+  "markdown.preview.fontSize": 12,
+  "chat.editor.fontSize": 12,
+  "scm.inputFontSize": 12,
+  "window.zoomLevel": 1
 }
