@@ -1,3 +1,4 @@
+import CreateFormButton from "@/components/buttons/form-button/create";
 import StatsCards from "@/components/cards/card-stats/stats-cards";
 import CardStatsWrapper from "@/components/cards/wrapper";
 import { Separator } from "@/components/ui/separator";
@@ -9,12 +10,13 @@ export default function Home() {
 		<>
 			<main className="flex-grow">
 				<div className="container pt-4 w-full mx-auto">
-					<Suspense fallback={<StatsCards loading={true}/>}>
+					<Suspense fallback={<StatsCards loading={true} />}>
 						<CardStatsWrapper />
 					</Suspense>
-					<Separator className="my-6"/>
+					<Separator className="my-6" />
 					<h2 className="text-4xl font-bold col-span-2">Your forms</h2>
-					<Separator className="my-6"/>
+					<Separator className="my-6" />
+					<CreateFormButton />
 				</div>
 			</main>
 			<footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
