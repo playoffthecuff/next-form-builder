@@ -29,7 +29,7 @@ export default function RootLayout({
 		<ClerkProvider>
 			<html lang="en" suppressHydrationWarning>
 				<body
-					className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+					className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen` }
 				>
 					<ThemeProvider
 						attribute="class"
