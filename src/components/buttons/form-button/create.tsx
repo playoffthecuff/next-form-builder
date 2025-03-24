@@ -25,10 +25,12 @@ import {
 	DialogTrigger,
 } from "@radix-ui/react-dialog";
 import { LoaderCircle, Plus, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function CreateFormButton() {
+	const router = useRouter();
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 	});
@@ -39,7 +41,7 @@ export default function CreateFormButton() {
 			toast("Success", {
 				description: "form created successfully"
 			});
-			console.log("🚀 ~ onSubmit ~ formId:", formId)
+			router.push(`/builder/${formId}`);
 		} catch {
 			toast("Error", {
 				description: "Something went wrong, please try again later",
@@ -49,8 +51,9 @@ export default function CreateFormButton() {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button size={"icon"}>
-					<Plus />
+				<Button variant={"outline"} className="group border border-primary/20 h-32 items-center justify-center flex flex-col hover:border-primary border-dashed gap-4">
+					<Plus className="text-muted-foreground group-hover:text-primary"/>
+					CREATE NEW FORM
 				</Button>
 			</DialogTrigger>
 			<DialogContent>
