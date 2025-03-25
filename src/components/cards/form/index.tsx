@@ -50,7 +50,7 @@ export default function FormCard({ form }: { form: Form }) {
 					</Button>
 				)}
 				{!form.published && (
-					<Button asChild className="w-full mt-2 text-md gap-4">
+					<Button asChild className="w-full mt-2 text-md gap-4" variant={"outline"}>
 						<Link href={`/builder/${form.id}`}>
 							Edit form
 							<Eye />
