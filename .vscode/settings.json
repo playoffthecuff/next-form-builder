@@ -7,5 +7,6 @@
   "markdown.preview.fontSize": 12,
   "chat.editor.fontSize": 12,
   "scm.inputFontSize": 12,
-  "window.zoomLevel": 1
+  "window.zoomLevel": 1,
+  "editor.wordWrap": "on"
 }

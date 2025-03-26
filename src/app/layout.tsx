@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { DesignerContextProvider } from "@/components/form-builder/designer/context";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -33,17 +34,19 @@ export default function RootLayout({
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
 				>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
-					>
-						<Header />
-						<main className="w-full max-w-7xl px-4 mx-auto flex-grow flex">{children}</main>
-						<Footer />
-						<Toaster />
-					</ThemeProvider>
+					<DesignerContextProvider>
+						<ThemeProvider
+							attribute="class"
+							defaultTheme="system"
+							enableSystem
+							disableTransitionOnChange
+						>
+							<Header />
+							<main className="w-full max-w-7xl px-4 mx-auto flex-grow flex">{children}</main>
+							<Footer />
+							<Toaster />
+						</ThemeProvider>
+					</DesignerContextProvider>
 				</body>
 			</html>
 		</ClerkProvider>

@@ -2,14 +2,14 @@ import { textFieldFormElement } from "./fields/text";
 
 export type ElementsType = "textField";
 
-export type FormElementInstance = {
+export interface FormElementInstance {
 	id: string;
 	type: ElementsType;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	extraAttributes?: Record<string, any>;
 };
 
-export type FormElement = {
+export interface FormElement {
 	type: ElementsType;
 
 	construct: (id: string) => FormElementInstance;
@@ -19,7 +19,7 @@ export type FormElement = {
 		label: string;
 	};
 
-	designerComponent: React.FC;
+	designerComponent: React.FC<{elementInstance: FormElementInstance}>;
 	formComponent: React.FC;
 	propertiesComponent: React.FC;
 };
