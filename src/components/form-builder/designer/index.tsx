@@ -9,11 +9,10 @@ import {
 	useDroppable,
 } from "@dnd-kit/core";
 import { Trash } from "lucide-react";
-import { nanoid } from "nanoid";
 import { MouseEventHandler, useState } from "react";
-import { DesignerSideBar } from "./sidebar";
 import { ElementsType, FormElementInstance, FormElements } from "../elements";
 import { useDesigner } from "./context";
+import { DesignerSideBar } from "./sidebar";
 
 const DesignerElementWrapper = ({
 	element,
@@ -73,15 +72,11 @@ const DesignerElementWrapper = ({
 		>
 			<div
 				ref={topHalf.setNodeRef}
-				className={cn(
-					"absolute w-full h-1/2 rounded-t-md",
-				)}
+				className={cn("absolute w-full h-1/2 rounded-t-md")}
 			/>
 			<div
 				ref={bottomHalf.setNodeRef}
-				className={cn(
-					"absolute w-full h-1/2 rounded-b-md bottom-0",
-				)}
+				className={cn("absolute w-full h-1/2 rounded-b-md bottom-0")}
 			/>
 			{isMouseOver && (
 				<>
@@ -120,7 +115,8 @@ const DesignerElementWrapper = ({
 };
 
 export const Designer = () => {
-	const { elements, addElement, selectedElement, setSelectedElement } = useDesigner();
+	const { elements, addElement, selectedElement, setSelectedElement, removeElement } =
+		useDesigner();
 	const droppable = useDroppable({
 		id: "designer-drop-area",
 		data: {
@@ -135,28 +131,77 @@ export const Designer = () => {
 			const isDesignerButtonElement =
 				active.data?.current?.isDesignerButtonElement;
 
-			if (isDesignerButtonElement) {
+			const isDroppingOverDesignerDropArea =
+				over.data?.current?.isDesignerDropArea;
+
+			const droppingSidebarButtonOverDesignerDropArea =
+				isDesignerButtonElement && isDroppingOverDesignerDropArea;
+
+			if (droppingSidebarButtonOverDesignerDropArea) {
 				const type: ElementsType = active.data.current?.type;
-				const newEl = FormElements[type].construct(nanoid());
-				addElement(0, newEl);
+				const newEl = FormElements[type].construct(crypto.randomUUID());
+				addElement(elements.length, newEl);
+				return;
+			}
+			const isDroppingOverDesignerElementTopHalf =
+				over.data?.current?.isTopHalfDesignerElement;
+			const isDroppingOverDesignerElementBottomHalf =
+				over.data?.current?.isBottomHalfDesignerElement;
+			const isDroppingOverDesignerElement =
+				isDroppingOverDesignerElementTopHalf ||
+				isDroppingOverDesignerElementBottomHalf;
+			const droppingSidebarButtonOverDesignerElement =
+				isDesignerButtonElement && isDroppingOverDesignerElement;
+
+			if (droppingSidebarButtonOverDesignerElement) {
+				const type: ElementsType = active.data.current?.type;
+				const newEl = FormElements[type].construct(crypto.randomUUID());
+
+				const overId = over.data?.current?.elementId;
+
+				const overElIndex = elements.findIndex((el) => el.id === overId);
+				if (overElIndex === -1) throw new Error("element not found");
+				let newElementIndex = overElIndex;
+				if (isDroppingOverDesignerElementBottomHalf) newElementIndex++;
+				addElement(newElementIndex, newEl);
+				return;
+			}
+			const isDraggingDesignerElement = active.data?.current?.isDesignerElement;
+			const draggingDesignerElementOverAnotherDesignerElement =
+				isDroppingOverDesignerElement && isDraggingDesignerElement;
+			if (draggingDesignerElementOverAnotherDesignerElement) {
+				const activeId = active.data?.current?.elementId;
+				const overId = over.data?.current?.elementId;
+				const activeElementIndex = elements.findIndex(
+					(el) => el.id === activeId,
+				);
+				const overElementIndex = elements.findIndex((el) => el.id === overId);
+				if (activeElementIndex === -1 || overElementIndex === -1)
+					throw new Error("element not found");
+
+				const activeElement = {...elements[activeElementIndex]};
+				removeElement(activeId);
+				let newElementIndex = overElementIndex;
+				if (isDroppingOverDesignerElementBottomHalf) newElementIndex++;
+				addElement(newElementIndex, activeElement);
 			}
 		},
 	});
 
 	const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
 		e.stopPropagation();
-		setSelectedElement(null)
+		setSelectedElement(null);
 	};
 
 	return (
 		<div className="flex w-full h-full">
-				{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-				<div className="p-4 w-full" onClick={handleClick}>
+			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+			<div className="p-4 w-full" onClick={handleClick}>
 				<div
 					ref={droppable.setNodeRef}
 					className={cn(
 						"bg-background max-w-5xl h-full m-auto rounded-xl flex flex-col flex-grow items-center justify-start flex-1 overflow-y-auto",
-						droppable.isOver && "ring-2 ring-primary/20",
+						droppable.isOver && "ring-6 ring-inset ring-primary",
 					)}
 				>
 					{!droppable.isOver && !elements.length && (
