@@ -1,4 +1,3 @@
-import { SidebarButton } from "@/components/buttons/form-button/sidebar";
 import { SidebarDragOverlayButton } from "@/components/buttons/form-button/sidebar-drag-overlay";
 import { Active, DragOverlay, useDndMonitor } from "@dnd-kit/core";
 import { useState } from "react";

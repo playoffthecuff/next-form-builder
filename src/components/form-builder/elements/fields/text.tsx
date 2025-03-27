@@ -1,6 +1,5 @@
 "use client";
 
-import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LetterText } from "lucide-react";
@@ -19,20 +18,31 @@ interface CustomInstance extends FormElementInstance {
 	extraAttributes: typeof extraAttributes;
 }
 
+const PropertiesComponent = ({
+	elementInstance,
+}: { elementInstance: FormElementInstance }) => {
+	const element = elementInstance as CustomInstance;
+	return <div>Form properties for {element.extraAttributes.label}</div>;
+};
+
 const DesignerComponent = ({
 	elementInstance,
 }: { elementInstance: FormElementInstance }) => {
 	const element = elementInstance as CustomInstance;
-	const {label, placeHolder, required, helperText	} = element.extraAttributes;
+	const { label, placeHolder, required, helperText } = element.extraAttributes;
 	return (
-	<div className="flex flex-col gap-2 w-full">
-		<Label>{label}
-			{required && "*"}
-		</Label>
-		<Input readOnly disabled placeholder={placeHolder}/>
-		{helperText && <p className="text-muted-foreground text-sm">{helperText}</p>}
-	</div>
-)};
+		<div className="flex flex-col gap-2 w-full">
+			<Label>
+				{label}
+				{required && "*"}
+			</Label>
+			<Input readOnly disabled placeholder={placeHolder} />
+			{helperText && (
+				<p className="text-muted-foreground text-sm">{helperText}</p>
+			)}
+		</div>
+	);
+};
 
 export const textFieldFormElement: FormElement = {
 	type,
@@ -47,5 +57,5 @@ export const textFieldFormElement: FormElement = {
 	},
 	designerComponent: DesignerComponent,
 	formComponent: () => <div>Form</div>,
-	propertiesComponent: () => <div>Properties</div>,
+	propertiesComponent: PropertiesComponent,
 };

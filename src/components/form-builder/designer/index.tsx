@@ -2,20 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+	DragEndEvent,
+	useDndMonitor,
+	useDraggable,
+	useDroppable,
+} from "@dnd-kit/core";
 import { Trash } from "lucide-react";
-import { DragEndEvent, useDndMonitor, useDraggable, useDroppable } from "@dnd-kit/core";
 import { nanoid } from "nanoid";
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import { DesignerSideBar } from "./sidebar";
-import { useDesigner } from "./context";
 import { ElementsType, FormElementInstance, FormElements } from "../elements";
-("./sidebar");
+import { useDesigner } from "./context";
 
 const DesignerElementWrapper = ({
 	element,
 }: { element: FormElementInstance }) => {
 	const [isMouseOver, setIsMouseOver] = useState(false);
-	const {removeElement} = useDesigner();
+	const { removeElement, selectedElement, setSelectedElement } = useDesigner();
 
 	const DesignerElement = FormElements[element.type].designerComponent;
 	const topHalf = useDroppable({
@@ -41,14 +45,21 @@ const DesignerElementWrapper = ({
 			type: element.type,
 			elementId: element.id,
 			isDesignerElement: true,
-		}
+		},
 	});
 
 	if (draggable.isDragging) return null;
 
 	const handleMouseEnter = () => setIsMouseOver(true);
 	const handleMouseLeave = () => setIsMouseOver(false);
-	const handleRemoveElement = () => removeElement(element.id);
+	const handleRemoveElement: MouseEventHandler<HTMLButtonElement> = (e) => {
+		e.stopPropagation();
+		removeElement(element.id);
+	};
+	const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+		e.stopPropagation();
+		setSelectedElement(element);
+	};
 
 	return (
 		<div
@@ -57,6 +68,7 @@ const DesignerElementWrapper = ({
 			{...draggable.attributes}
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
+			onClick={handleClick}
 			className="relative h-30 flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
 		>
 			<div
@@ -75,28 +87,42 @@ const DesignerElementWrapper = ({
 			/>
 			{isMouseOver && (
 				<>
-				<div className="absolute right-0 h-full">
-					<Button className="flex justify-center h-full border rounded-md rounded-l-none bg-red-500" variant={"outline"} onClick={handleRemoveElement}>
-						<Trash style={{height: 24, width: 24}}/>
-					</Button>
-				</div>
+					<div className="absolute right-0 h-full">
+						<Button
+							className="flex justify-center h-full border rounded-md rounded-l-none bg-red-500"
+							variant={"outline"}
+							onClick={handleRemoveElement}
+						>
+							<Trash style={{ height: 24, width: 24 }} />
+						</Button>
+					</div>
 					<div className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 animate-pulse">
-						<p className="text-muted-foreground text-sm">Click for properties or drag to move</p>
+						<p className="text-muted-foreground text-sm">
+							Click for properties or drag to move
+						</p>
 					</div>
 				</>
 			)}
-			{ topHalf.isOver && <div className="absolute top-0 w-full rounded-md rounded-b-none h-2 bg-primary"/>}
-			<div className={cn("flex w-full h-30 items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none opacity-100", isMouseOver && "opacity-30")}>
+			{topHalf.isOver && (
+				<div className="absolute top-0 w-full rounded-md rounded-b-none h-2 bg-primary" />
+			)}
+			<div
+				className={cn(
+					"flex w-full h-30 items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none opacity-100",
+					isMouseOver && "opacity-30",
+				)}
+			>
 				<DesignerElement elementInstance={element} />
 			</div>
-			{ bottomHalf.isOver && <div className="absolute bottom-0 w-full rounded-md rounded-t-none h-2 bg-primary"/>}
-
+			{bottomHalf.isOver && (
+				<div className="absolute bottom-0 w-full rounded-md rounded-t-none h-2 bg-primary" />
+			)}
 		</div>
 	);
 };
 
 export const Designer = () => {
-	const { elements, addElement } = useDesigner();
+	const { elements, addElement, selectedElement, setSelectedElement } = useDesigner();
 	const droppable = useDroppable({
 		id: "designer-drop-area",
 		data: {
@@ -119,9 +145,15 @@ export const Designer = () => {
 		},
 	});
 
+	const handleClick: MouseEventHandler<HTMLDivElement> = (e) => {
+		e.stopPropagation();
+		setSelectedElement(null)
+	};
+
 	return (
 		<div className="flex w-full h-full">
-			<div className="p-4 w-full ">
+				{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+				<div className="p-4 w-full" onClick={handleClick}>
 				<div
 					ref={droppable.setNodeRef}
 					className={cn(
