@@ -8,5 +8,11 @@
   "chat.editor.fontSize": 12,
   "scm.inputFontSize": 12,
   "window.zoomLevel": 1,
-  "editor.wordWrap": "on"
+  "editor.wordWrap": "on",
+  "editor.folding": false,
+  "editor.foldingHighlight": false,
+  "editor.smoothScrolling": true,
+  "editor.tabSize": 1,
+  "window.density.editorTabHeight": "compact",
+  "editor.cursorBlinking": "phase"
 }
