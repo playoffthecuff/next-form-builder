@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react"
 import { FormElements } from "../elements";
 import { useDesigner } from "./context";
+import { Separator } from "@/components/ui/separator";
 
 export default function PropertiesFormSidebar() {
 	const { selectedElement, setSelectedElement } = useDesigner();
@@ -18,6 +19,7 @@ export default function PropertiesFormSidebar() {
         <X/>
       </Button>
     </div>
+    <Separator className="mb-4"/>
     <PropertiesForm elementInstance={selectedElement}/>
   </div>;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 import { FormElementInstance } from "../elements";
 
 interface DesignerContext {
@@ -10,13 +10,16 @@ interface DesignerContext {
 
 	selectedElement: FormElementInstance | null;
 	setSelectedElement: Dispatch<SetStateAction<FormElementInstance | null>>;
+
+	updateElement: (id: string, element: FormElementInstance) => void;
 }
 
 export const DesignerContext = createContext<DesignerContext | null>(null);
 
 export function DesignerContextProvider({ children }: { children: ReactNode }) {
 	const [elements, setElements] = useState<FormElementInstance[]>([]);
-	const [selectedElement, setSelectedElement] = useState<FormElementInstance | null>(null);
+	const [selectedElement, setSelectedElement] =
+		useState<FormElementInstance | null>(null);
 	const addElement = (i: number, el: FormElementInstance) =>
 		setElements((p) => {
 			const newEls = [...p];
@@ -28,8 +31,26 @@ export function DesignerContextProvider({ children }: { children: ReactNode }) {
 		setElements((p) => p.filter((el) => el.id !== id));
 	};
 
+	const updateElement = (id: string, element: FormElementInstance) => {
+		setElements((p) => {
+			const newElements = [...p];
+			const index = newElements.findIndex((el) => el.id === id);
+			newElements[index] = element;
+			return newElements;
+		});
+	};
+
 	return (
-		<DesignerContext.Provider value={{ elements, addElement, removeElement, selectedElement, setSelectedElement }}>
+		<DesignerContext.Provider
+			value={{
+				elements,
+				addElement,
+				removeElement,
+				selectedElement,
+				setSelectedElement,
+				updateElement,
+			}}
+		>
 			{children}
 		</DesignerContext.Provider>
 	);

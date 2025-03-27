@@ -75,14 +75,12 @@ const DesignerElementWrapper = ({
 				ref={topHalf.setNodeRef}
 				className={cn(
 					"absolute w-full h-1/2 rounded-t-md",
-					topHalf.isOver && "bg-green-500",
 				)}
 			/>
 			<div
 				ref={bottomHalf.setNodeRef}
 				className={cn(
 					"absolute w-full h-1/2 rounded-b-md bottom-0",
-					bottomHalf.isOver && "bg-red-500",
 				)}
 			/>
 			{isMouseOver && (
