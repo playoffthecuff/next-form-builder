@@ -70,3 +70,31 @@ export async function getFormById(id: number) {
     }
   })
 }
+
+export async function updateFormContent(id: number, jsonContent: string) {
+  const user = await currentUser();
+  if (!user) throw new Error("user not found");
+  return await prisma.form.update({
+    where: {
+      userId: user.id,
+      id,
+    },
+    data: {
+      content: jsonContent,
+    }
+  })
+}
+
+export async function publishForm(id: number) {
+  const user = await currentUser();
+  if (!user) throw new Error("user not found");
+  return await prisma.form.update({
+    data: {
+      published: true,
+    },
+    where: {
+      userId: user.id,
+      id,
+    }
+  })
+}

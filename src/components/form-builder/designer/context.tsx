@@ -1,10 +1,11 @@
 "use client";
 
-import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
 import { FormElementInstance } from "../elements";
 
 interface DesignerContext {
 	elements: FormElementInstance[];
+	setElements: Dispatch<SetStateAction<FormElementInstance[]>>,
 	addElement: (i: number, el: FormElementInstance) => void;
 	removeElement: (id: string) => void;
 
@@ -44,6 +45,7 @@ export function DesignerContextProvider({ children }: { children: ReactNode }) {
 		<DesignerContext.Provider
 			value={{
 				elements,
+				setElements,
 				addElement,
 				removeElement,
 				selectedElement,
