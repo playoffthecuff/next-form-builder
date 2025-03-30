@@ -17,7 +17,7 @@ export const PublishFormButton = ({id}: {id: number}) => {
 				description: "Your form is now public available"
 			});
 			router.refresh();
-		} catch (e) {
+		} catch {
 			toast.error("Error", {
 				description: "Something went wrong",
 			});

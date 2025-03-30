@@ -1,3 +1,4 @@
+import { updateFormContent } from "@/actions/form";
 import { useDesigner } from "@/components/form-builder/designer/context";
 import { Button } from "@/components/ui/button";
 import { LoaderCircle, Save } from "lucide-react";
@@ -8,7 +9,7 @@ export default function SaveFormButton({ id }: { id: number }) {
 	const { elements } = useDesigner();
 	const [loading, startTransition] = useTransition();
 
-	const updateFormContent = async () => {
+	const upFormContent = async () => {
 		try {
 			const jsonElements = JSON.stringify(elements);
 			await updateFormContent(id, jsonElements);
@@ -21,11 +22,11 @@ export default function SaveFormButton({ id }: { id: number }) {
 	};
 
 	const handleClick = () => {
-		startTransition(updateFormContent);
+		startTransition(upFormContent);
 	};
 
 	return (
-		<Button variant={"outline"} className="gap-2" onClick={handleClick}>
+		<Button variant={"outline"} className="gap-2" onClick={handleClick} disabled={loading}>
 			<Save className="w-4 h-4" />
 			Save
 			{loading && <LoaderCircle className="animate-spin" />}

@@ -3,7 +3,6 @@ import {
 	DndContext,
 	MouseSensor,
 	TouchSensor,
-	useDroppable,
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
@@ -26,25 +25,18 @@ export default function FormBuilder({ form }: { form: Form }) {
 	const { setElements } = useDesigner();
 	const [isReady, setIsReady] = useState(false);
 
-	const droppable = useDroppable({
-		id: "designer-drop-area",
-		data: { isDesignerDropArea: true },
-	});
-
 	const mouseSensor = useSensor(MouseSensor, {
 		activationConstraint: {
 			distance: 10,
 		},
 	});
-
-	const sensors = useSensors(mouseSensor);
-
 	const touchSensor = useSensor(TouchSensor, {
 		activationConstraint: {
 			delay: 300,
 			tolerance: 5,
 		},
 	});
+	const sensors = useSensors(mouseSensor, touchSensor);
 
 	useEffect(() => {
 		if (isReady) return;
@@ -75,7 +67,7 @@ export default function FormBuilder({ form }: { form: Form }) {
 		return (
 			<>
 			<Confetti width={window.innerWidth} height={innerHeight} recycle={false} numberOfPieces={512}/>
-				<div className="flex flex-col items-center justify-center h-full w-full ">
+				<div className="flex flex-col items-center justify-center h-full w-full my-auto">
 					<div className="max-w-md">
 						<h1 className="text-center text-4xl font-medium text-primary border-bottom pb-2 mb-10">
 							Form published! 🎉🎉🎉
@@ -93,15 +85,15 @@ export default function FormBuilder({ form }: { form: Form }) {
 						<div className="flex justify-between">
 							<Button variant={"link"} asChild>
 								<Link href="/" className="gap-2">
-									<ArrowLeft />
+										<ArrowLeft />
+																		Go back home
 								</Link>
-								Go back home
 							</Button>
 							<Button variant={"link"} asChild>
 								<Link href={`/forms/${form.id}`} className="gap-2">
+								Form details
 									<ArrowRight />
 								</Link>
-								Form details
 							</Button>
 						</div>
 					</div>

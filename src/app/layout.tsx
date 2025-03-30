@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DesignerContextProvider } from "@/components/form-builder/designer/context";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
 				<body
 					className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
 				>
+					<NextTopLoader />
 					<DesignerContextProvider>
 						<ThemeProvider
 							attribute="class"
