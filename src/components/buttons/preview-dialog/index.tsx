@@ -28,7 +28,7 @@ function PreviewDialogButton() {
 					<div className="max-w-152 flex flex-col gap-4 flex-grow bg-background h-full w-full rounded-2xl p-8 overflow-y-auto">
 						{elements.map((el) => {
 							const FormComponent = FormElements[el.type].formComponent;
-							return <FormComponent key={el.id} elementInstance={el}/>;
+							return <FormComponent key={el.id} elementInstance={el} />;
 						})}
 					</div>
 				</div>

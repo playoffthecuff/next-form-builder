@@ -7,7 +7,9 @@ export interface FormElementInstance {
 	type: ElementsType;
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	extraAttributes?: Record<string, any>;
-};
+}
+
+export type SubmitFunction = (key: string, value: string) => void;
 
 export interface FormElement {
 	type: ElementsType;
@@ -19,10 +21,17 @@ export interface FormElement {
 		label: string;
 	};
 
-	designerComponent: React.FC<{elementInstance: FormElementInstance}>;
-	formComponent: React.FC<{elementInstance: FormElementInstance}>;
-	propertiesComponent: React.FC<{elementInstance: FormElementInstance}>;
-};
+	designerComponent: React.FC<{ elementInstance: FormElementInstance }>;
+	formComponent: React.FC<{
+		elementInstance: FormElementInstance;
+		submitValue?: SubmitFunction;
+		isInvalid?: boolean;
+		defaultValue?: string;
+	}>;
+	propertiesComponent: React.FC<{ elementInstance: FormElementInstance }>;
+
+	validate: (fe: FormElementInstance, cv: string) => boolean;
+}
 
 export type FormElementsType = {
 	[key in ElementsType]: FormElement;
