@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LetterText } from "lucide-react";
+import { FileDigit, LetterText } from "lucide-react";
 import {
 	FormEventHandler,
 	KeyboardEventHandler,
@@ -31,13 +31,13 @@ import {
 } from "..";
 import { useDesigner } from "../../designer/context";
 
-const type: ElementsType = "textField";
+const type: ElementsType = "numberField";
 
 const extraAttributes = {
-	label: "Text field",
+	label: "Number field",
 	helperText: "Helper text",
 	required: false,
-	placeHolder: "Value here ...",
+	placeHolder: "0",
 };
 
 const propertiesSchema = z.object({
@@ -65,7 +65,7 @@ export const DesignerComponent = ({
 				{label}
 				{required && "*"}
 			</Label>
-			<Input readOnly disabled placeholder={placeHolder} />
+			<Input readOnly disabled type="number" placeholder={placeHolder} />
 			{helperText && (
 				<p className="text-muted-foreground text-sm">{helperText}</p>
 			)}
@@ -100,9 +100,10 @@ export const FormComponent = ({
 				className={cn(error && "border-red-500")}
 				placeholder={placeHolder}
 				onChange={(e) => setValue(e.target.value)}
+				type="number"
 				onBlur={(e) => {
 					if (!submitValue) return;
-					const isValid = TextFieldFormElement.validate(
+					const isValid = NumberFieldFormElement.validate(
 						element,
 						e.target.value,
 					);
@@ -186,7 +187,9 @@ export const PropertiesComponent = ({
 							<FormMessage />
 						</FormItem>
 					)}
-				></FormField>
+				>
+
+				</FormField>
 				<FormField
 					control={form.control}
 					name="placeHolder"
@@ -200,7 +203,9 @@ export const PropertiesComponent = ({
 							<FormMessage />
 						</FormItem>
 					)}
-				></FormField>
+				>
+
+				</FormField>
 				<FormField
 					control={form.control}
 					name="helperText"
@@ -217,7 +222,9 @@ export const PropertiesComponent = ({
 							<FormMessage />
 						</FormItem>
 					)}
-				></FormField>
+				>
+
+				</FormField>
 				<FormField
 					control={form.control}
 					name="required"
@@ -239,13 +246,15 @@ export const PropertiesComponent = ({
 							<FormMessage />
 						</FormItem>
 					)}
-				></FormField>
+				>
+					
+				</FormField>
 			</form>
 		</Form>
 	);
 };
 
-export const TextFieldFormElement: FormElement = {
+export const NumberFieldFormElement: FormElement = {
 	type,
 	construct: (id: string) => ({
 		id,
@@ -253,8 +262,8 @@ export const TextFieldFormElement: FormElement = {
 		extraAttributes,
 	}),
 	designerButton: {
-		icon: LetterText,
-		label: "Text Field",
+		icon: FileDigit,
+		label: "Number Field",
 	},
 	designerComponent: DesignerComponent,
 	formComponent: FormComponent,

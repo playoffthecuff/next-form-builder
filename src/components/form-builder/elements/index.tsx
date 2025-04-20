@@ -1,11 +1,19 @@
+import { NumberFieldFormElement } from "./fields/number";
 import { ParagraphFieldFormElement } from "./fields/paragraph";
 import { SeparatorFieldFormElement } from "./fields/separator";
 import { SpacerFieldFormElement } from "./fields/spacer";
 import { SubitleFieldFormElement as SubtitleFieldFormElement } from "./fields/subtitle";
-import { textFieldFormElement as TextFieldFormElement } from "./fields/text";
+import { TextFieldFormElement } from "./fields/text";
 import { TitleFieldFormElement } from "./fields/title";
 
-export type ElementsType = "textField" | "titleField" | "subtitleField" | "paragraphField" | "separatorField" | "spacerField";
+export type ElementsType =
+	| "textField"
+	| "titleField"
+	| "subtitleField"
+	| "paragraphField"
+	| "separatorField"
+	| "spacerField"
+	| "numberField";
 
 export interface FormElementInstance {
 	id: string;
@@ -49,4 +57,5 @@ export const FormElements: FormElementsType = {
 	paragraphField: ParagraphFieldFormElement,
 	separatorField: SeparatorFieldFormElement,
 	spacerField: SpacerFieldFormElement,
+	numberField: NumberFieldFormElement,
 };

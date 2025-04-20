@@ -20,6 +20,7 @@ export default function FormElementsSidebar() {
 					Form elements
 				</p>
 				<SidebarButton formElement={FormElements.subtitleField} />
+				<SidebarButton formElement={FormElements.numberField} />
 			</div>
 		</>
 	);
