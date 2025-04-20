@@ -13,6 +13,10 @@ export default function FormElementsSidebar() {
 				</p>
 				<SidebarButton formElement={FormElements.textField} />
 				<SidebarButton formElement={FormElements.titleField} />
+				<p className="text-sm text-muted-foreground col-span-1 md:col-span-2 my-2 place-self-start">
+					Form elements
+				</p>
+				<SidebarButton formElement={FormElements.subtitleField} />
 			</div>
 		</>
 	);

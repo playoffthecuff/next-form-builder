@@ -1,7 +1,8 @@
-import { textFieldFormElement } from "./fields/text";
+import { SubitleFieldFormElement as SubtitleFieldFormElement } from "./fields/subtitle";
+import { textFieldFormElement as TextFieldFormElement } from "./fields/text";
 import { TitleFieldFormElement } from "./fields/title";
 
-export type ElementsType = "textField" | "titleField";
+export type ElementsType = "textField" | "titleField" | "subtitleField";
 
 export interface FormElementInstance {
 	id: string;
@@ -39,6 +40,7 @@ export type FormElementsType = {
 };
 
 export const FormElements: FormElementsType = {
-	textField: textFieldFormElement,
+	textField: TextFieldFormElement,
 	titleField: TitleFieldFormElement,
+	subtitleField: SubtitleFieldFormElement,
 };
