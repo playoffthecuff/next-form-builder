@@ -23,6 +23,7 @@ import {
 	SubmitFunction,
 } from "..";
 import { useDesigner } from "../../designer/context";
+import { Textarea } from "@/components/ui/textarea";
 
 const type: ElementsType = "paragraphField";
 
@@ -93,7 +94,7 @@ export const PropertiesComponent = ({
 	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) =>
 		e.preventDefault();
 
-	const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+	const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
 		if (e.key === "Enter") e.currentTarget.blur();
 	};
 
@@ -109,14 +110,10 @@ export const PropertiesComponent = ({
 					name="paragraph"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Label</FormLabel>
+							<FormLabel>Text</FormLabel>
 							<FormControl>
-								<Input {...field} onKeyDown={handleKeyDown} />
+								<Textarea {...field} onKeyDown={handleKeyDown} rows={5}/>
 							</FormControl>
-							<FormDescription>
-								The label of the field. <br /> It will be displayed above the
-								field.
-							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}

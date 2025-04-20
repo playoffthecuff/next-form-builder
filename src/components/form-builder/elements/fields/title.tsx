@@ -109,14 +109,10 @@ export const PropertiesComponent = ({
 					name="title"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Label</FormLabel>
+							<FormLabel>Title</FormLabel>
 							<FormControl>
 								<Input {...field} onKeyDown={handleKeyDown} />
 							</FormControl>
-							<FormDescription>
-								The label of the field. <br /> It will be displayed above the
-								field.
-							</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
