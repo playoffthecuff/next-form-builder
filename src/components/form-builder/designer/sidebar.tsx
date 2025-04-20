@@ -1,5 +1,3 @@
-import { SidebarButton } from "@/components/buttons/form-button/sidebar";
-import { FormElements } from "../elements";
 import { useDesigner } from "./context";
 import FormElementsSidebar from "./elements-sidebar";
 import PropertiesFormSidebar from "./properties-sidebar";

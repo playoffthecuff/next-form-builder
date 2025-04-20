@@ -14,6 +14,7 @@ export default function FormElementsSidebar() {
 				<SidebarButton formElement={FormElements.textField} />
 				<SidebarButton formElement={FormElements.titleField} />
 				<SidebarButton formElement={FormElements.paragraphField} />
+				<SidebarButton formElement={FormElements.separatorField} />
 				<p className="text-sm text-muted-foreground col-span-1 md:col-span-2 my-2 place-self-start">
 					Form elements
 				</p>
