@@ -1,6 +1,7 @@
 import { textFieldFormElement } from "./fields/text";
+import { TitleFieldFormElement } from "./fields/title";
 
-export type ElementsType = "textField";
+export type ElementsType = "textField" | "titleField";
 
 export interface FormElementInstance {
 	id: string;
@@ -39,4 +40,5 @@ export type FormElementsType = {
 
 export const FormElements: FormElementsType = {
 	textField: textFieldFormElement,
+	titleField: TitleFieldFormElement,
 };

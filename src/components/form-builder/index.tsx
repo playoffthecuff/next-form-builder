@@ -120,7 +120,7 @@ export default function FormBuilder({ form }: { form: Form }) {
 						)}
 					</div>
 				</div>
-				<div className="flex w-full flex-grow items-center justify-center relative overflow-y-auto h-50 bg-accent bg-[url(/graph-paper.svg)] dark:bg-[url(/graph-paper-dark.svg)]">
+				<div className="flex w-full flex-grow items-center justify-center relative overflow-y-auto bg-accent bg-[url(/graph-paper.svg)] dark:bg-[url(/graph-paper-dark.svg)] h-full">
 					<Designer />
 				</div>
 			</div>

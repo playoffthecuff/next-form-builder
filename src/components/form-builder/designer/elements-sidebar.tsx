@@ -1,11 +1,19 @@
 import { SidebarButton } from "@/components/buttons/form-button/sidebar";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 import { FormElements } from "../elements";
 
 export default function FormElementsSidebar() {
 	return (
-		<aside className="bg-background w-100 flex flex-col flex-grow gap-2 border-l-2 border-muted p-4 bf-background overflow-y-auto h-full">
-			Elements
-			<SidebarButton formElement={FormElements.textField} />
-		</aside>
+		<>
+			<p className="text-sm text-foreground/70">DnD elements</p>
+			<Separator className="my-2" />
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-2 place-items-center">
+				<p className="text-sm text-muted-foreground col-span-1 md:col-span-2 my-2 place-self-start">
+					Layout elements
+				</p>
+				<SidebarButton formElement={FormElements.textField} />
+				<SidebarButton formElement={FormElements.titleField} />
+			</div>
+		</>
 	);
 }

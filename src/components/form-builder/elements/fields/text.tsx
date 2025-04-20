@@ -53,7 +53,7 @@ interface CustomInstance extends FormElementInstance {
 	extraAttributes: typeof extraAttributes;
 }
 
-const DesignerComponent = ({
+export const DesignerComponent = ({
 	elementInstance,
 }: { elementInstance: FormElementInstance }) => {
 	const element = elementInstance as CustomInstance;
@@ -73,7 +73,7 @@ const DesignerComponent = ({
 	);
 };
 
-const FormComponent = ({
+export const FormComponent = ({
 	elementInstance,
 	submitValue,
 	isInvalid,
@@ -126,7 +126,7 @@ const FormComponent = ({
 	);
 };
 
-const PropertiesComponent = ({
+export const PropertiesComponent = ({
 	elementInstance,
 }: { elementInstance: FormElementInstance }) => {
 	const element = elementInstance as CustomInstance;
