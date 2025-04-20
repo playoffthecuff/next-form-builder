@@ -11,10 +11,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Baseline, LetterText } from "lucide-react";
+import { LetterText } from "lucide-react";
 import {
 	FormEventHandler,
 	KeyboardEventHandler,
@@ -31,13 +33,14 @@ import {
 } from "..";
 import { useDesigner } from "../../designer/context";
 
-const type: ElementsType = "textField";
+const type: ElementsType = "textAreaField";
 
 const extraAttributes = {
-	label: "Text field",
+	label: "Text-area",
 	helperText: "Helper text",
 	required: false,
 	placeHolder: "Value here ...",
+	rows: 3,
 };
 
 const propertiesSchema = z.object({
@@ -45,6 +48,7 @@ const propertiesSchema = z.object({
 	helperText: z.string().max(200),
 	required: z.boolean().default(false),
 	placeHolder: z.string().max(50),
+	rows: z.number().min(1).max(10),
 });
 
 type PropertiesSchema = z.infer<typeof propertiesSchema>;
@@ -53,19 +57,19 @@ interface CustomInstance extends FormElementInstance {
 	extraAttributes: typeof extraAttributes;
 }
 
-const DesignerComponent = ({
+export const DesignerComponent = ({
 	elementInstance,
 }: { elementInstance: FormElementInstance }) => {
 	const element = elementInstance as CustomInstance;
-	const { updateElement } = useDesigner();
-	const { label, placeHolder, required, helperText } = element.extraAttributes;
+	const { label, placeHolder, required, helperText } =
+		element.extraAttributes;
 	return (
 		<div className="flex flex-col gap-2 w-full">
 			<Label>
 				{label}
 				{required && "*"}
 			</Label>
-			<Input readOnly disabled placeholder={placeHolder} />
+			<Textarea readOnly disabled placeholder={placeHolder} />
 			{helperText && (
 				<p className="text-muted-foreground text-sm">{helperText}</p>
 			)}
@@ -73,35 +77,40 @@ const DesignerComponent = ({
 	);
 };
 
-const FormComponent = ({
+export const FormComponent = ({
 	elementInstance,
 	submitValue,
 	isInvalid,
+	defaultValue,
 }: {
 	elementInstance: FormElementInstance;
 	submitValue?: SubmitFunction;
 	isInvalid?: boolean;
+	defaultValue?: string;
 }) => {
 	const element = elementInstance as CustomInstance;
-	const [value, setValue] = useState("");
+	const [value, setValue] = useState(defaultValue);
 	const [error, setError] = useState(false);
-	const { updateElement } = useDesigner();
 	useEffect(() => setError(!!isInvalid), [isInvalid]);
-	console.log(value);
-	const { label, placeHolder, required, helperText } = element.extraAttributes;
+	const { label, placeHolder, required, helperText, rows } =
+		element.extraAttributes;
 	return (
 		<div className="flex flex-col gap-2 w-full">
 			<Label className={cn(error && "text-red-500")}>
 				{label}
 				{required && "*"}
 			</Label>
-			<Input
-				className={cn(error && "text-red-500")}
+			<Textarea
+				rows={rows}
+				className={cn(error && "border-red-500")}
 				placeholder={placeHolder}
 				onChange={(e) => setValue(e.target.value)}
 				onBlur={(e) => {
 					if (!submitValue) return;
-					const isValid = TextFieldFormElement.validate(element, e.target.value);
+					const isValid = TextAreaFieldFormElement.validate(
+						element,
+						e.target.value,
+					);
 					setError(!isValid);
 					if (!isValid) return;
 					submitValue(element.id, e.target.value);
@@ -122,7 +131,7 @@ const FormComponent = ({
 	);
 };
 
-const PropertiesComponent = ({
+export const PropertiesComponent = ({
 	elementInstance,
 }: { elementInstance: FormElementInstance }) => {
 	const element = elementInstance as CustomInstance;
@@ -135,12 +144,13 @@ const PropertiesComponent = ({
 			helperText: element.extraAttributes.helperText,
 			required: element.extraAttributes.required,
 			placeHolder: element.extraAttributes.placeHolder,
+			rows: element.extraAttributes.rows,
 		},
 	});
 	useEffect(() => form.reset(element.extraAttributes), [element, form]);
 
 	const applyChanges = (v: PropertiesSchema) => {
-		const { label, helperText, placeHolder, required } = v;
+		const { label, helperText, placeHolder, required, rows } = v;
 		updateElement(element.id, {
 			...element,
 			extraAttributes: {
@@ -148,6 +158,7 @@ const PropertiesComponent = ({
 				helperText,
 				placeHolder,
 				required,
+				rows,
 			},
 		});
 	};
@@ -216,6 +227,25 @@ const PropertiesComponent = ({
 				></FormField>
 				<FormField
 					control={form.control}
+					name="rows"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Rows {form.watch("rows")}</FormLabel>
+							<FormControl>
+								<Slider
+									defaultValue={[field.value]}
+									min={1}
+									max={10}
+									step={1}
+									onValueChange={(v) => field.onChange(v[0])}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				></FormField>
+				<FormField
+					control={form.control}
 					name="required"
 					render={({ field }) => (
 						<FormItem className="flex items-center justify-between rounded-lg border p-3 shadow-sm">
@@ -241,7 +271,7 @@ const PropertiesComponent = ({
 	);
 };
 
-export const TextFieldFormElement: FormElement = {
+export const TextAreaFieldFormElement: FormElement = {
 	type,
 	construct: (id: string) => ({
 		id,
@@ -249,12 +279,14 @@ export const TextFieldFormElement: FormElement = {
 		extraAttributes,
 	}),
 	designerButton: {
-		icon: Baseline,
-		label: "Text Field",
+		icon: LetterText,
+		label: "TextArea Field",
 	},
 	designerComponent: DesignerComponent,
 	formComponent: FormComponent,
 	propertiesComponent: PropertiesComponent,
-	validate: (fe: FormElementInstance, cv: string) =>
-		fe.extraAttributes?.required ? cv.length > 0 : true,
+	validate: (fe: FormElementInstance, cv: string) => {
+		console.log(fe.extraAttributes?.required ? cv.length > 0 : true);
+		return fe.extraAttributes?.required ? cv.length > 0 : true;
+	},
 };
