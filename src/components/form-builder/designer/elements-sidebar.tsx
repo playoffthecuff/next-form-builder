@@ -24,6 +24,7 @@ export default function FormElementsSidebar() {
 				<SidebarButton formElement={FormElements.textAreaField} />
 				<SidebarButton formElement={FormElements.dateField} />
 				<SidebarButton formElement={FormElements.selectField} />
+				<SidebarButton formElement={FormElements.checkboxField} />
 			</div>
 		</>
 	);

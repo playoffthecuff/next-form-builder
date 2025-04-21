@@ -1,5 +1,6 @@
 "use client";
 
+import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Form,
 	FormControl,
@@ -14,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Baseline } from "lucide-react";
+import { SquareCheck } from "lucide-react";
 import {
 	FormEventHandler,
 	KeyboardEventHandler,
@@ -31,20 +32,18 @@ import {
 } from "..";
 import { useDesigner } from "../../designer/context";
 
-const type: ElementsType = "textField";
+const type: ElementsType = "checkboxField";
 
 const extraAttributes = {
-	label: "Text field",
+	label: "Checkbox field",
 	helperText: "Helper text",
 	required: false,
-	placeHolder: "Value here ...",
 };
 
 const propertiesSchema = z.object({
 	label: z.string().min(2).max(50),
 	helperText: z.string().max(200),
 	required: z.boolean().default(false),
-	placeHolder: z.string().max(50),
 });
 
 type PropertiesSchema = z.infer<typeof propertiesSchema>;
@@ -57,18 +56,20 @@ const DesignerComponent = ({
 	elementInstance,
 }: { elementInstance: FormElementInstance }) => {
 	const element = elementInstance as CustomInstance;
-	const { updateElement } = useDesigner();
-	const { label, placeHolder, required, helperText } = element.extraAttributes;
+	const { label, required, helperText } = element.extraAttributes;
+	const id = `checkbox-${element.id}`;
 	return (
-		<div className="flex flex-col gap-2 w-full">
-			<Label>
-				{label}
-				{required && "*"}
-			</Label>
-			<Input readOnly disabled placeholder={placeHolder} />
-			{helperText && (
-				<p className="text-muted-foreground text-sm">{helperText}</p>
-			)}
+		<div className="flex items-top space-x-2">
+			<Checkbox id={id} />
+			<div className="grid  gap-1.5 leading-none">
+				<Label htmlFor={id}>
+					{label}
+					{required && "*"}
+				</Label>
+				{helperText && (
+					<p className="text-muted-foreground text-sm">{helperText}</p>
+				)}
+			</div>
 		</div>
 	);
 };
@@ -77,45 +78,54 @@ const FormComponent = ({
 	elementInstance,
 	submitValue,
 	isInvalid,
+	defaultValue,
 }: {
 	elementInstance: FormElementInstance;
 	submitValue?: SubmitFunction;
 	isInvalid?: boolean;
+	defaultValue?: string;
 }) => {
 	const element = elementInstance as CustomInstance;
-	const [value, setValue] = useState("");
+	const [value, setValue] = useState(defaultValue === "true");
 	const [error, setError] = useState(false);
 	useEffect(() => setError(!!isInvalid), [isInvalid]);
-	const { label, placeHolder, required, helperText } = element.extraAttributes;
+	const { label, required, helperText } = element.extraAttributes;
+	const id = `checkbox-${element.id}`;
+
 	return (
-		<div className="flex flex-col gap-2 w-full">
-			<Label className={cn(error && "text-red-500")}>
-				{label}
-				{required && "*"}
-			</Label>
-			<Input
-				className={cn(error && "text-red-500")}
-				placeholder={placeHolder}
-				onChange={(e) => setValue(e.target.value)}
-				onBlur={(e) => {
+		<div className="flex items-top space-x-2">
+			<Checkbox
+				id={id}
+				checked={value}
+				className={cn(error && "border-red-500")}
+				onCheckedChange={(c) => {
+					let v = false;
+					if (c) v = true;
+					setValue(v);
 					if (!submitValue) return;
-					const isValid = TextFieldFormElement.validate(element, e.target.value);
+					const strV = v ? "true" : "false";
+					const isValid = CheckboxFieldFormElement.validate(element, strV);
 					setError(!isValid);
-					if (!isValid) return;
-					submitValue(element.id, e.target.value);
+					submitValue(element.id, strV);
 				}}
-				value={value}
 			/>
-			{helperText && (
-				<p
-					className={cn(
-						"text-muted-foreground text-sm",
-						error && "text-red-500",
-					)}
-				>
-					{helperText}
-				</p>
-			)}
+
+			<div className="grid  gap-1.5 leading-none">
+				<Label htmlFor={id} className={cn(error && "text-red-500")}>
+					{label}
+					{required && "*"}
+				</Label>
+				{helperText && (
+					<p
+						className={cn(
+							"text-muted-foreground text-sm",
+							error && "text-red-500",
+						)}
+					>
+						{helperText}
+					</p>
+				)}
+			</div>
 		</div>
 	);
 };
@@ -132,19 +142,17 @@ const PropertiesComponent = ({
 			label: element.extraAttributes.label,
 			helperText: element.extraAttributes.helperText,
 			required: element.extraAttributes.required,
-			placeHolder: element.extraAttributes.placeHolder,
 		},
 	});
 	useEffect(() => form.reset(element.extraAttributes), [element, form]);
 
 	const applyChanges = (v: PropertiesSchema) => {
-		const { label, helperText, placeHolder, required } = v;
+		const { label, helperText, required } = v;
 		updateElement(element.id, {
 			...element,
 			extraAttributes: {
 				label,
 				helperText,
-				placeHolder,
 				required,
 			},
 		});
@@ -177,20 +185,6 @@ const PropertiesComponent = ({
 								The label of the field. <br /> It will be displayed above the
 								field.
 							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				></FormField>
-				<FormField
-					control={form.control}
-					name="placeHolder"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Placeholder</FormLabel>
-							<FormControl>
-								<Input {...field} onKeyDown={handleKeyDown} />
-							</FormControl>
-							<FormDescription>The placeholder of the field.</FormDescription>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -239,7 +233,7 @@ const PropertiesComponent = ({
 	);
 };
 
-export const TextFieldFormElement: FormElement = {
+export const CheckboxFieldFormElement: FormElement = {
 	type,
 	construct: (id: string) => ({
 		id,
@@ -247,12 +241,14 @@ export const TextFieldFormElement: FormElement = {
 		extraAttributes,
 	}),
 	designerButton: {
-		icon: Baseline,
-		label: "Text Field",
+		icon: SquareCheck,
+		label: "Checkbox Field",
 	},
 	designerComponent: DesignerComponent,
 	formComponent: FormComponent,
 	propertiesComponent: PropertiesComponent,
-	validate: (fe: FormElementInstance, cv: string) =>
-		fe.extraAttributes?.required ? cv.length > 0 : true,
+	validate: (fe: FormElementInstance, cv: string) => {
+		if (fe.extraAttributes?.required) return cv === "true";
+		return true;
+	},
 };

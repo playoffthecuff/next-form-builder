@@ -1,3 +1,4 @@
+import { CheckboxFieldFormElement } from "./fields/checkbox";
 import { DateFieldFormElement } from "./fields/date";
 import { NumberFieldFormElement } from "./fields/number";
 import { ParagraphFieldFormElement } from "./fields/paragraph";
@@ -19,7 +20,8 @@ export type ElementsType =
 	| "numberField"
 	| "textAreaField"
 	| "dateField"
-	| "selectField";
+	| "selectField"
+	| "checkboxField";
 
 export interface FormElementInstance {
 	id: string;
@@ -67,4 +69,5 @@ export const FormElements: FormElementsType = {
 	textAreaField: TextAreaFieldFormElement,
 	dateField: DateFieldFormElement,
 	selectField: SelectFieldFormElement,
+	checkboxField: CheckboxFieldFormElement,
 };
