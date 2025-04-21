@@ -28,6 +28,11 @@ export default async function SubmissionsTable({ id }: { id: number }) {
 	formElements.forEach((el) => {
 		switch (el.type) {
 			case "textField":
+			case "numberField":
+			case "textAreaField":
+			case "dateField":
+			case "selectField":
+			case "checkboxField":
 				columns.push({
 					id: el.id,
 					label: el.extraAttributes?.label,
