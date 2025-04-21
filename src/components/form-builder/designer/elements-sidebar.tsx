@@ -23,6 +23,7 @@ export default function FormElementsSidebar() {
 				<SidebarButton formElement={FormElements.numberField} />
 				<SidebarButton formElement={FormElements.textAreaField} />
 				<SidebarButton formElement={FormElements.dateField} />
+				<SidebarButton formElement={FormElements.selectField} />
 			</div>
 		</>
 	);
